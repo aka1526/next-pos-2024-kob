@@ -77,10 +77,10 @@ model SaleTempDetail {
   id Int @id() @default(autoincrement())
   saleTempId Int 
   foodId Int 
-  tasteId Int 
-  foodSizeId Int 
+  tasteId Int? 
+  foodSizeId Int? 
   Food Food @relation(fields: [foodId], references: [id])
-  Taste Taste @relation(fields: [tasteId], references: [id])
-  FoodSize FoodSize @relation(fields: [foodSizeId], references: [id])
+  Taste Taste? @relation(fields: [tasteId], references: [id])
+  FoodSize FoodSize? @relation(fields: [foodSizeId], references: [id])
   SaleTemp SaleTemp @relation(fields: [saleTempId], references: [id])
 }

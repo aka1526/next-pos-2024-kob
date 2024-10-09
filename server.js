@@ -20,6 +20,7 @@ const saleTempController = require('./controllers/SaleTempController');
 //
 // saleTemp
 //
+app.get('/api/saleTemp/list', (req, res) => saleTempController.list(req, res));
 app.post('/api/saleTemp/create', (req, res) => saleTempController.create(req, res));
 
 //
