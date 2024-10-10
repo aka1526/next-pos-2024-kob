@@ -64,13 +64,17 @@ model Food {
   foodTypeId Int
   FoodType FoodType @relation(fields: [foodTypeId], references: [id])
   SaleTempDetails SaleTempDetail[]
+  SaleTemps SaleTemp[]
 }
 
 model SaleTemp {
   id Int @id() @default(autoincrement())
   userId Int 
   tableNo Int 
+  foodId Int 
+  qty Int 
   SaleTempDetails SaleTempDetail[]
+  Food Food @relation(fields: [foodId], references: [id])   
 }
 
 model SaleTempDetail {
