@@ -20,6 +20,9 @@ const saleTempController = require('./controllers/SaleTempController');
 //
 // saleTemp
 //
+app.put('/api/saleTemp/selectSize', (req, res) => saleTempController.selectSize(req, res));
+app.put('/api/saleTemp/unselectTaste', (req, res) => saleTempController.unselectTaste(req, res));
+app.put('/api/saleTemp/selectTaste', (req, res) => saleTempController.selectTaste(req, res));
 app.get('/api/saleTemp/info/:id', (req, res) => saleTempController.info(req, res));
 app.post('/api/saleTemp/generateSaleTempDetail', (req, res) => saleTempController.generateSaleTempDetail(req, res));
 app.put('/api/saleTemp/updateQty', (req, res) => saleTempController.updateQty(req, res));
