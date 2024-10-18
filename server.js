@@ -20,6 +20,7 @@ const saleTempController = require('./controllers/SaleTempController');
 //
 // saleTemp
 //
+app.delete('/api/saleTemp/removeSaleTempDetail', (req, res) => saleTempController.removeSaleTempDetail(req, res));
 app.post('/api/saleTemp/createSaleTempDetail', (req, res) => saleTempController.createSaleTempDetail(req, res));
 app.put('/api/saleTemp/unselectSize', (req, res) => saleTempController.unselectSize(req, res));
 app.put('/api/saleTemp/selectSize', (req, res) => saleTempController.selectSize(req, res));

@@ -301,5 +301,40 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
+    },
+    removeSaleTempDetail: async (req, res) => {
+        try {
+            const saleTempDetailId = req.body.saleTempDetailId;
+            const saleTempDetail = await prisma.saleTempDetail.findFirst({
+                where: {
+                    id: saleTempDetailId
+                }
+            })
+
+            await prisma.saleTempDetail.delete({
+                where: {
+                    id: saleTempDetailId
+                }
+            })
+
+            const countSaleTempDetail = await prisma.saleTempDetail.count({
+                where: {
+                    saleTempId: saleTempDetail.saleTempId
+                }
+            })
+
+            await prisma.saleTemp.update({
+                where: {
+                    id: saleTempDetail.saleTempId
+                },
+                data: {
+                    qty: countSaleTempDetail
+                }
+            })
+
+            return res.send({ message: 'success' })
+        } catch (e) {
+            return res.status(500).send({ error: e.message })
+        }
     }
 }
