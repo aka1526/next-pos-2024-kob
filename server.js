@@ -16,6 +16,14 @@ const foodSizeController = require('./controllers/FoodSizeController');
 const tasteController = require('./controllers/TasteController');
 const foodController = require('./controllers/FoodController');
 const saleTempController = require('./controllers/SaleTempController');
+const organizationController = require('./controllers/OrganizationController');
+
+//
+// organization
+//
+app.post('/api/organization/create', (req, res) => organizationController.create(req, res));
+app.get('/api/organization/info', (req, res) => organizationController.info(req, res));
+app.post('/api/organization/upload', (req, res) => organizationController.upload(req, res));
 
 //
 // saleTemp

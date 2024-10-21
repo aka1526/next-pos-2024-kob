@@ -10,6 +10,9 @@ module.exports = {
                     userId: req.body.userId,
                     tableNo: req.body.tableNo,
                     foodId: req.body.foodId
+                },
+                include: {
+                    SaleTempDetails: true
                 }
             })
 
@@ -23,14 +26,16 @@ module.exports = {
                     }
                 })
             } else {
-                await prisma.saleTemp.update({
-                    where: {
-                        id: rowSaleTemp.id
-                    },
-                    data: {
-                        qty: rowSaleTemp.qty + 1
-                    }
-                })
+                if (rowSaleTemp.SaleTempDetails.length === 0) {
+                    await prisma.saleTemp.update({
+                        where: {
+                            id: rowSaleTemp.id
+                        },
+                        data: {
+                            qty: rowSaleTemp.qty + 1
+                        }
+                    })
+                }
             }
 
             return res.send({ message: 'success' })
