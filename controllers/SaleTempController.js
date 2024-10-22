@@ -347,6 +347,7 @@ module.exports = {
             // organization
             const organization = await prisma.organization.findFirst();
 
+            // rows in saleTemps
             const saleTemps = await prisma.saleTemp.findMany({
                 include: {
                     Food: true,
@@ -356,9 +357,9 @@ module.exports = {
                     userId: req.body.userId,
                     tableNo: req.body.tableNo
                 }
-            })
+            });
 
-            // create bill by pdfkit
+            // create bill by pkfkit
             const pdfkit = require('pdfkit');
             const fs = require('fs');
             const dayjs = require('dayjs');
@@ -368,15 +369,15 @@ module.exports = {
 
             const doc = new pdfkit({
                 size: [paperWidth, 200],
-                margin: {
+                margins: {
                     top: 3,
+                    bottom: 3,
                     left: 3,
                     right: 3,
-                    bottom: 3
-                }
+                },
             });
             const fileName = `uploads/bill-${dayjs(new Date()).format('YYYYMMDDHHmmss')}.pdf`;
-            const font = 'Kanit/Kanit-Regular.ttf';
+            const font = 'Kanit/kanit-regular.ttf';
 
             doc.pipe(fs.createWriteStream(fileName));
 
@@ -387,7 +388,7 @@ module.exports = {
                 align: 'center',
                 width: imageWidth,
                 height: 20
-            });
+            })
             doc.moveDown();
 
             doc.font(font);
@@ -396,46 +397,48 @@ module.exports = {
             doc.text(organization.name, padding, doc.y);
             doc.fontSize(5);
             doc.text(organization.address);
-            doc.text('เบอร์โทร : ' + organization.phone);
-            doc.text('เลขผู้เสียภาษี : ' + organization.taxCode);
-            doc.text('โต้ะ : ' + req.body.tableNo, { align: 'center' });
-            doc.text('วันที่ : ' + dayjs(new Date()).format('DD/MM/YYYY HH:mm'), { align: 'center' });
+            doc.text(`เบอร์โทร: ${organization.phone}`);
+            doc.text(`เลขประจำตัวผู้เสียภาษี: ${organization.taxCode}`);
+            doc.text(`โต๊ะ: ${req.body.tableNo}`, { align: 'center' });
+            doc.text(`วันที่: ${dayjs(new Date()).format('DD/MM/YYYY HH:mm:ss')}`, { align: 'center' });
+            doc.text('รายการอาหาร', { align: 'center' });
             doc.moveDown();
 
             const y = doc.y;
             doc.fontSize(4);
-            doc.text('รายการอาหาร', padding, y);
-            doc.text('ราคา', padding + 10, y, { align: 'right', width: 20 });
+            doc.text('รายการ', padding, y);
+            doc.text('ราคา', padding + 18, y, { align: 'right', width: 20 });
             doc.text('จำนวน', padding + 36, y, { align: 'right', width: 20 });
             doc.text('รวม', padding + 55, y, { align: 'right' });
 
             // line
             // set border height
-            doc.lineHeight(0.1);
+            doc.lineWidth(0.1);
             doc.moveTo(padding, y + 6).lineTo(paperWidth - padding, y + 6).stroke();
 
             // loop saleTemps
             saleTemps.map((item, index) => {
                 const y = doc.y;
                 doc.text(item.Food.name, padding, y);
-                doc.text(item.Food.price, padding + 10, y, { align: 'right', width: 20 });
+                doc.text(item.Food.price, padding + 18, y, { align: 'right', width: 20 });
                 doc.text(item.qty, padding + 36, y, { align: 'right', width: 20 });
                 doc.text(item.Food.price * item.qty, padding + 55, y, { align: 'right' });
             });
 
             // sum amount
             let sumAmount = 0;
-            saleTemps.map((item) => {
-                sumAmount += item.price * item.qty;
+            saleTemps.forEach((item) => {
+                sumAmount += item.Food.price * item.qty;
             });
 
-            // display sum amount
-            doc.text('รวม ' + sumAmount + ' บาท', { align: 'right' });
+            // display amount
+            doc.text(`รวม: ${sumAmount.toLocaleString('th-TH')} บาท`, { align: 'right' });
             doc.end();
 
-            return res.send({ message: 'success', fileName: fileName })
+            return res.send({ message: 'success', fileName: fileName });
         } catch (e) {
             return res.status(500).send({ error: e.message })
+
         }
     }
 }
