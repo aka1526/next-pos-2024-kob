@@ -28,6 +28,7 @@ app.post('/api/organization/upload', (req, res) => organizationController.upload
 //
 // saleTemp
 //
+app.post('/api/saleTemp/printBillAfterPay', (req, res) => saleTempController.printBillAfterPay(req, res));
 app.post('/api/saleTemp/endSale', (req, res) => saleTempController.endSale(req, res));
 app.post('/api/saleTemp/printBillBeforePay', (req, res) => saleTempController.printBillBeforePay(req, res));
 app.delete('/api/saleTemp/removeSaleTempDetail', (req, res) => saleTempController.removeSaleTempDetail(req, res));

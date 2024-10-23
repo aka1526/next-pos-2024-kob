@@ -448,7 +448,8 @@ module.exports = {
                         include: {
                             Food: true
                         }
-                    }
+                    },
+                    Food: true
                 },
                 where: {
                     userId: req.body.userId
@@ -554,7 +555,7 @@ module.exports = {
                 }
             });
 
-            const BillSaleDetails = billSale.BillSaleDetails;
+            const billSaleDetails = billSale.BillSaleDetails;
 
             // create bill by pkfkit
             const pdfkit = require('pdfkit');
@@ -614,7 +615,7 @@ module.exports = {
             doc.moveTo(padding, y + 6).lineTo(paperWidth - padding, y + 6).stroke();
 
             // loop saleTemps
-            BillSaleDetails.map((item, index) => {
+            billSaleDetails.map((item, index) => {
                 const y = doc.y;
                 doc.text(item.Food.name, padding, y);
                 doc.text(item.Food.price, padding + 18, y, { align: 'right', width: 20 });
@@ -624,7 +625,7 @@ module.exports = {
 
             // sum amount
             let sumAmount = 0;
-            saleTemps.forEach((item) => {
+            billSaleDetails.forEach((item) => {
                 sumAmount += item.Food.price * 1;
             });
 
