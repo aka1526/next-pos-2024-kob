@@ -446,7 +446,8 @@ module.exports = {
                 include: {
                     SaleTempDetails: {
                         include: {
-                            Food: true
+                            Food: true,
+                            FoodSize: true
                         }
                     },
                     Food: true
@@ -479,8 +480,9 @@ module.exports = {
                                 billSaleId: billSale.id,
                                 foodId: detail.foodId,
                                 price: detail.Food.price,
-                                moneyAdded: detail.moneyAdded,
-                                tasteId: detail.tasteId
+                                moneyAdded: detail.FoodSize?.moneyAdded,
+                                tasteId: detail.tasteId,
+                                foodSizeId: detail.foodSizeId
                             }
                         })
                     }
@@ -543,7 +545,8 @@ module.exports = {
                 include: {
                     BillSaleDetails: {
                         include: {
-                            Food: true
+                            Food: true,
+                            FoodSize: true,
                         }
                     },
                     User: true
@@ -552,6 +555,9 @@ module.exports = {
                     userId: req.body.userId,
                     tableNo: req.body.tableNo,
                     status: 'use'
+                },
+                orderBy: {
+                    id: 'desc'
                 }
             });
 
@@ -617,16 +623,19 @@ module.exports = {
             // loop saleTemps
             billSaleDetails.map((item, index) => {
                 const y = doc.y;
-                doc.text(item.Food.name, padding, y);
+                let name = item.Food.name;
+                if (item.foodSizeId != null) name += ` (${item.FoodSize.name}) +${item.FoodSize.moneyAdded}`;
+
+                doc.text(name, padding, y);
                 doc.text(item.Food.price, padding + 18, y, { align: 'right', width: 20 });
                 doc.text(1, padding + 36, y, { align: 'right', width: 20 });
-                doc.text(item.Food.price * 1, padding + 55, y, { align: 'right' });
+                doc.text(item.Food.price + item.moneyAdded, padding + 55, y, { align: 'right' });
             });
 
             // sum amount
             let sumAmount = 0;
             billSaleDetails.forEach((item) => {
-                sumAmount += item.Food.price * 1;
+                sumAmount += item.Food.price + item.moneyAdded;
             });
 
             // display amount

@@ -42,6 +42,7 @@ model FoodSize {
   status String @default("use")
   FoodType FoodType @relation(fields: [foodTypeId], references: [id])
   SaleTempDetails SaleTempDetail[]
+  BillSaleDetails BillSaleDetail[]
 }
 
 model Taste {
@@ -52,6 +53,7 @@ model Taste {
   foodTypeId Int
   FoodType FoodType @relation(fields: [foodTypeId], references: [id])
   SaleTempDetails SaleTempDetail[]
+  BillSaleDetails BillSaleDetail[]
 }
 
 model Food {
@@ -128,6 +130,8 @@ model BillSaleDetail {
   price Int?
   Food Food @relation(fields: [foodId], references: [id])
   BillSale BillSale @relation(fields: [billSaleId], references: [id])
+  FoodSize FoodSize? @relation(fields: [foodSizeId], references: [id])
+  Taste Taste? @relation(fields: [tasteId], references: [id])
 }
 
 
