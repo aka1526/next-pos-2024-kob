@@ -20,11 +20,35 @@ const organizationController = require('./controllers/OrganizationController');
 const billSaleController = require('./controllers/BillSaleController');
 const reportController = require('./controllers/ReportController');
 
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const isAuthen = (req, res, next) => {
+    if (req.headers.authorization) {
+        try {
+            const token = req.headers.authorization.split(' ')[1]; // Bearer token example "Bearer tsdsdfsdf9svdf"
+            const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+            if (decoded) {
+                next();
+            } else {
+                return res.status(401).send({ error: 'Unauthorized' });
+            }
+        } catch (e) {
+            return res.status(401).send(e.message);
+        }
+    } else {
+        return res.status(401).send({ error: 'Unauthorized' });
+    }
+}
+
 //
 // report
 //
-app.post('/api/report/sumPerMonthInYear', (req, res) => reportController.sumPerMonthInYear(req, res));
-app.post('/api/report/sumPerDayInYearAndMonth', (req, res) => reportController.sumPerDayInYearAndMonth(req, res));
+app.post('/api/report/sumPerMonthInYear', isAuthen, (req, res) => reportController.sumPerMonthInYear(req, res));
+app.post('/api/report/sumPerDayInYearAndMonth', isAuthen, (req, res) => reportController.sumPerDayInYearAndMonth(req, res));
 
 //
 // billSale
