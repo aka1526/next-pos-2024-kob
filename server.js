@@ -96,6 +96,10 @@ app.post('/api/foodType/create', (req, res) => foodTypeController.create(req, re
 // 
 // user
 //
+app.post('/api/user/create', (req, res) => userController.create(req, res));
+app.get('/api/user/list', (req, res) => userController.list(req, res));
+app.put('/api/user/update', (req, res) => userController.update(req, res));
+app.delete('/api/user/remove/:id', (req, res) => userController.remove(req, res));
 app.post('/api/user/signIn', (req, res) => userController.signIn(req, res))
 
 app.listen(3001, () => {
