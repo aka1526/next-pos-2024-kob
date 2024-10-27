@@ -86,6 +86,7 @@ app.post('/api/saleTemp/create', (req, res) => saleTempController.create(req, re
 //
 // food
 //
+app.post('/api/food/paginate', (req, res) => foodController.paginate(req, res));
 app.get('/api/food/filter/:foodType', (req, res) => foodController.filter(req, res));
 app.put('/api/food/update', (req, res) => foodController.update(req, res));
 app.delete('/api/food/remove/:id', (req, res) => foodController.remove(req, res));
@@ -120,6 +121,7 @@ app.post('/api/foodType/create', (req, res) => foodTypeController.create(req, re
 // 
 // user
 //
+app.get('/api/user/getLevelByToken', (req, res) => userController.getLevelByToken(req, res));
 app.post('/api/user/create', (req, res) => userController.create(req, res));
 app.get('/api/user/list', (req, res) => userController.list(req, res));
 app.put('/api/user/update', (req, res) => userController.update(req, res));
