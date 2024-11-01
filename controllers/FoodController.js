@@ -1,8 +1,18 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../models/prismaClient");
+const Joi = require("joi");
+const pdfkit = require("pdfkit");
+const fs = require("fs");
+const dayjs = require("dayjs");
+//const jwt = require('jsonwebtoken');
+const donenv = require("dotenv");
+donenv.config();
 
-module.exports = {
-    upload: async (req, res) => {
+const UPLOADS_INV = process.env.UPLOADS_INV;
+const UPLOADS_BILL = process.env.UPLOADS_BILL;
+
+ // exports.signIn = async (req, res) => { 
+ //   upload: async (req, res) => {
+exports.upload = async (req, res) => {     
         try {
             if (req.files != undefined) {
                 const myFile = req.files.myFile;
@@ -28,8 +38,10 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    create: async (req, res) => {
+    };
+
+ //   create: async (req, res) => {
+exports.create = async (req, res) => {          
         try {
             await prisma.food.create({
                 data: {
@@ -46,8 +58,10 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    list: async (req, res) => {
+    };
+
+    //list: async (req, res) => {
+exports.list = async (req, res) => {
         try {
             const foods = await prisma.food.findMany({
                 include: {
@@ -65,8 +79,9 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    remove: async (req, res) => {
+    };
+ //   remove: async (req, res) => {
+exports.remove = async (req, res) => {
         try {
             await prisma.food.update({
                 data: {
@@ -81,8 +96,9 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    update: async (req, res) => {
+    };
+ 
+exports.update = async (req, res) => {
         try {
             // remove old file in food
             const oldFood = await prisma.food.findUnique({
@@ -118,8 +134,9 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    filter: async (req, res) => {
+    };
+ 
+exports.filter = async (req, res) => {
         try {
             let condition = {
                 status: 'use'
@@ -140,8 +157,9 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    search: async (req, res) => {
+    };
+
+exports.search = async (req, res) => {
         try {
             let condition = {
                 status: 'use'
@@ -162,8 +180,9 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    paginate: async (req, res) => {
+    };
+    
+exports.paginate = async (req, res) => {
         try {
             const page = req.body.page;
             const itemsPerPage = req.body.itemsPerPage;
@@ -184,9 +203,8 @@ module.exports = {
             })
             const totalPage = Math.ceil(totalItems / itemsPerPage);
 
-            return res.send({ results: foods, totalItems: totalItems, totalPage: totalPage })
+            return res.send({ results: foods, totalItems: totalItems, totalPage: totalPage });
         } catch (e) {
-            return res.status(500).send({ error: e.message })
+            return res.status(500).send({ error: e.message });
         }
-    }
-}
+ }

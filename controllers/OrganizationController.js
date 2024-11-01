@@ -1,8 +1,19 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require("../models/prismaClient");
+const Joi = require("joi");
+const pdfkit = require("pdfkit");
+const fs = require("fs");
+const dayjs = require("dayjs");
+//const jwt = require('jsonwebtoken');
+const donenv = require("dotenv");
+donenv.config();
 
-module.exports = {
-    create: async (req, res) => {
+const UPLOADS_INV = process.env.UPLOADS_INV;
+const UPLOADS_BILL = process.env.UPLOADS_BILL;
+
+
+  // exports.signIn = async (req, res) => {  
+  //  create: async (req, res) => {
+exports.create = async (req, res) => { 
         try {
             const oldOrganization = await prisma.organization.findMany();
             const payload = {
@@ -31,16 +42,18 @@ module.exports = {
         } catch (err) {
             return res.status(500).send({ message: err.message })
         }
-    },
-    info: async (req, res) => {
+    };
+  //  info: async (req, res) => {
+exports.info = async (req, res) => { 
         try {
             const organization = await prisma.organization.findFirst();
             return res.send({ result: organization })
         } catch (err) {
             return res.status(500).send({ message: err.message })
         }
-    },
-    upload: async (req, res) => {
+    };
+    //upload: async (req, res) => {
+exports.upload = async (req, res) => { 
         try {
             const file = req.files.file;
             const extension = file.name.split('.').pop();
@@ -68,5 +81,5 @@ module.exports = {
         } catch (err) {
             return res.status(500).send({ message: err.message })
         }
-    }
-}
+    };
+ 

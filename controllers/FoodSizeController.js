@@ -1,8 +1,18 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require("../models/prismaClient");
+const Joi = require("joi");
+const pdfkit = require("pdfkit");
+const fs = require("fs");
+const dayjs = require("dayjs");
+//const jwt = require('jsonwebtoken');
+const donenv = require("dotenv");
+donenv.config();
 
-module.exports = {
-    create: async (req, res) => {
+const UPLOADS_INV = process.env.UPLOADS_INV;
+const UPLOADS_BILL = process.env.UPLOADS_BILL;
+
+ // exports.signIn = async (req, res) => {  }  
+    //create: async (req, res) => {
+ exports.create = async (req, res) => { 
         try {
             await prisma.foodSize.create({
                 data: {
@@ -18,8 +28,10 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    list: async (req, res) => {
+    };
+
+ // list: async (req, res) => {
+exports.list = async (req, res) => { 
         try {
             const rows = await prisma.foodSize.findMany({
                 include: {
@@ -37,8 +49,9 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    remove: async (req, res) => {
+    };
+// remove: async (req, res) => {
+exports.remove = async (req, res) => { 
         try {
             await prisma.foodSize.update({
                 data: {
@@ -53,8 +66,9 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    },
-    update: async (req, res) => {
+    };
+//update: async (req, res) => {
+exports.update = async (req, res) => { 
         try {
             await prisma.foodSize.update({
                 data: {
@@ -72,5 +86,4 @@ module.exports = {
         } catch (e) {
             return res.status(500).send({ error: e.message })
         }
-    }
-}
+};

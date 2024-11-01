@@ -1,9 +1,15 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const dayjs = require('dayjs');
+const prisma = require("../models/prismaClient");
+const Joi = require("joi");
+const pdfkit = require("pdfkit");
+const fs = require("fs");
+const dayjs = require("dayjs");
+const jwt = require('jsonwebtoken');
+const donenv = require("dotenv");
+donenv.config();
 
-module.exports = {
-    sumPerDayInYearAndMonth: async (req, res) => {
+ 
+   // sumPerDayInYearAndMonth: async (req, res) => {
+    exports.sumPerDayInYearAndMonth = async (req, res) => {    
         try {
             const year = req.body.year;
             const month = req.body.month;
@@ -50,8 +56,10 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
-    },
-    sumPerMonthInYear: async (req, res) => {
+    }
+
+   // sumPerMonthInYear: async (req, res) => {
+ exports.sumPerMonthInYear = async (req, res) => {   
         try {
             const year = req.body.year;
             const sumPerMonth = [];
@@ -93,5 +101,4 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
-    }
-}
+};

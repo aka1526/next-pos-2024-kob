@@ -196,18 +196,13 @@ billSaleDetails.map((row, index) => {
         position = tableTop + itemSpacing;
     }
 
-    // เพิ่มข้อมูลวัสดุในตาราง
-    generateTableRow(doc, position, (index + 1), 'FA-CCROW-'+(index + 1).toString() , row.Food.name,row.Food.price,1, row.Food.price);
-    position += itemSpacing;
-});
-
- 
+      // เพิ่มข้อมูลวัสดุในตาราง
+      generateTableRow(doc, position, (index + 1), 'FA-CCROW-'+(index + 1).toString() , row.Food.name,row.Food.price,1, row.Food.price);
+      position += itemSpacing;
+  });
 
      // ปิดและบันทึกเอกสาร PDF
-     doc.end();
-
-  
-
+   doc.end();
     return res.send({ message: "success", fileName: fileName });
   } catch (e) {
     return res.status(500).send({ error: e.message });
