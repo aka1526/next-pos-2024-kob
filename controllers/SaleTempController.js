@@ -626,10 +626,10 @@ module.exports = {
                 let name = item.Food.name;
                 if (item.foodSizeId != null) name += ` (${item.FoodSize.name}) +${item.FoodSize.moneyAdded}`;
 
-                doc.text(name, padding, y);
-                doc.text(item.Food.price, padding + 18, y, { align: 'right', width: 20 });
-                doc.text(1, padding + 36, y, { align: 'right', width: 20 });
-                doc.text(item.Food.price + item.moneyAdded, padding + 55, y, { align: 'right' });
+                doc.text(name                               , padding      , y);
+                doc.text(item.Food.price                    , padding + 18, y, { align: 'right', width: 20 });
+                doc.text(1                                  , padding + 36, y, { align: 'right', width: 20 });
+                doc.text(item.Food.price + item.moneyAdded  , padding + 55, y, { align: 'right' });
             });
 
             // sum amount

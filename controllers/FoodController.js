@@ -23,7 +23,7 @@ module.exports = {
                     return res.send({ message: 'success', fileName: newFileName });
                 });
             } else {
-                return res.status(500).send({ error: 'No file uploaded' });
+                return res.status(500).send({ error: 'No file uploaded',fileName:'' });
             }
         } catch (e) {
             return res.status(500).send({ error: e.message })
@@ -91,23 +91,25 @@ module.exports = {
                 }
             })
 
-            if (oldFood.img != '') {
-                if (req.body.img != '') {
-                    const fs = require('fs');
-                    fs.unlinkSync('uploads/' + oldFood.img);
+            if (oldFood && oldFood.img && req.body.img) {
+                try {
+                  fs.unlinkSync('uploads/' + oldFood.img);
+                } catch (error) {
+                  console.error('Failed to delete old image:', error);
                 }
-            }
+              }
 
             await prisma.food.update({
                 where: {
                     id: req.body.id
                 },
                 data: {
+                   
                     foodTypeId: req.body.foodTypeId,
                     name: req.body.name,
                     remark: req.body.remark,
                     price: req.body.price,
-                    img: req.body.img,
+                    ...(req.body.img && { img: req.body.img }),
                     foodType: req.body.foodType
                 }
             })
@@ -139,6 +141,28 @@ module.exports = {
             return res.status(500).send({ error: e.message })
         }
     },
+    search: async (req, res) => {
+        try {
+            let condition = {
+                status: 'use'
+            }
+
+            if (req.params.foodType != 'all') {
+                condition.name = req.params.foodType;
+            }
+
+            const foods = await prisma.food.findMany({
+                where: condition,
+                orderBy: {
+                    name: 'asc'
+                }
+            })
+
+            return res.send({ results: foods })
+        } catch (e) {
+            return res.status(500).send({ error: e.message })
+        }
+    },
     paginate: async (req, res) => {
         try {
             const page = req.body.page;
@@ -147,7 +171,7 @@ module.exports = {
                 skip: (page - 1) * itemsPerPage,
                 take: itemsPerPage,
                 orderBy: {
-                    id: 'desc'
+                    name: 'asc'
                 },
                 where: {
                     status: 'use'
